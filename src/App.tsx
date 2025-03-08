@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
     { title: 'Digital Racer', tagline: 'Racing Simulation', videoSrc: 'src/assets/game4.mp4' },
   ];
 
-  const handleTermsClick = (e) => {
+  const handleTermsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setShowTerms(true);
   };
@@ -222,20 +222,22 @@ function App() {
   );
 
   // Custom hook for autoplay videos
-  function useAutoPlayVideo(videoRef) {
+  function useAutoPlayVideo(videoRef: React.RefObject<HTMLVideoElement | null>) {
     useEffect(() => {
       if (videoRef.current) {
-        videoRef.current.play().catch(error => {
+        videoRef.current.play().catch((error: Error) => {
           console.error("Autoplay failed:", error);
         });
       }
     }, [videoRef]);
   }
 
+
   // Portfolio Item with autoplay video
-  const PortfolioItem = ({ item }) => {
-    const videoRef = useRef(null);
-    useAutoPlayVideo(videoRef);
+  const PortfolioItem = ({ item }: { item: { title: string; tagline: string; videoSrc: string } }) => {
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+
+    useAutoPlayVideo(videoRef); // No TypeScript error now ✅
 
     return (
       <div className="portfolio-item" style={{
@@ -280,6 +282,8 @@ function App() {
       </div>
     );
   };
+
+
 
   return (
     <div className="App" style={{
@@ -332,9 +336,6 @@ function App() {
             fontSize: '24px',
             cursor: 'pointer',
             padding: '5px',
-            '@media (max-width: 768px)': {
-              display: 'block',
-            }
           }}
           className="mobile-menu-button"
         >
